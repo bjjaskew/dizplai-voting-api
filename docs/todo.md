@@ -3,12 +3,12 @@
 ### T1: Configure base project to better fit the task
 [X] - T1A - Implement dockerfile to generate container
 
-[ ] - T1B - Implement docker compose including the app & connect the app to postgres
+[X] - T1B - Implement docker compose including the app & connect the app to postgres
 
-[ ] - T1C - Implement flyway configuration with the application
+[X] - T1C - Implement flyway configuration with the application
 
 ### T2: Implement create poll / get polls
-[ ] - T2A - Poll table design
+[X] - T2A - Poll table design
 
     Name, description, id, created date, end date
 
