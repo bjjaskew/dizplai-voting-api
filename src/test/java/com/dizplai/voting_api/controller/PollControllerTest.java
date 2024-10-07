@@ -5,12 +5,12 @@ import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.requests.CreateVoteRequest;
 import com.dizplai.voting_api.controller.responses.OptionResponse;
 import com.dizplai.voting_api.controller.responses.PollResponse;
+import com.dizplai.voting_api.controller.responses.VoteResponse;
 import com.dizplai.voting_api.controller.responses.VotesAggregatedResponse;
 import com.dizplai.voting_api.exceptions.NotFoundException;
 import com.dizplai.voting_api.service.OptionService;
 import com.dizplai.voting_api.service.PollService;
 import com.dizplai.voting_api.service.VoteService;
-import com.dizplai.voting_api.service.VoteServiceTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
@@ -320,9 +320,9 @@ public class PollControllerTest {
     }
 
     @Test
-    void testGetVotesByPollId() throws Exception {
+    void testGetAggregateVotesByPollId() throws Exception {
 
-        when(mockVoteService.getVotesByPollId(any())).thenReturn(List.of(VotesAggregatedResponse.builder()
+        when(mockVoteService.getAggregatedVotesByPollId(any())).thenReturn(List.of(VotesAggregatedResponse.builder()
                 .voteCount(10)
                 .optionId(1)
                 .build()));
@@ -331,6 +331,35 @@ public class PollControllerTest {
                 [{
                   "optionId":1,
                   "voteCount":10
+                }]
+                """;
+
+        MvcResult result = this.mockMvc
+                .perform(get("/poll/1/aggregate")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+
+        verify(mockVoteService).getAggregatedVotesByPollId(1);
+        JSONAssert.assertEquals(expectedJsonResponse, response, false);
+    }
+
+    @Test
+    void testGetVotesByPollId() throws Exception {
+
+        when(mockVoteService.getVotesByPollId(any())).thenReturn(List.of(VoteResponse.builder()
+                .date(LocalDateTime.MAX)
+                .optionId(1)
+                .id(1)
+                .build()));
+
+        String expectedJsonResponse = """
+                [{
+                  "optionId":1,
+                  "id":1,
+                  "date": "+999999999-12-31T23:59:59.999999999"
                 }]
                 """;
 

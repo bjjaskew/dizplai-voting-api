@@ -1,14 +1,11 @@
 package com.dizplai.voting_api.service;
 
-import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
 import com.dizplai.voting_api.controller.requests.CreateVoteRequest;
 import com.dizplai.voting_api.controller.responses.OptionResponse;
-import com.dizplai.voting_api.controller.responses.PollResponse;
+import com.dizplai.voting_api.controller.responses.VoteResponse;
 import com.dizplai.voting_api.controller.responses.VotesAggregatedResponse;
-import com.dizplai.voting_api.data.entity.OptionEntity;
 import com.dizplai.voting_api.data.entity.VoteEntity;
 import com.dizplai.voting_api.data.entity.VotePollOptionAggregationProjection;
-import com.dizplai.voting_api.data.repository.IOptionRepository;
 import com.dizplai.voting_api.data.repository.IVoteRepository;
 import com.dizplai.voting_api.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -26,7 +23,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -73,7 +69,7 @@ public class VoteServiceTest {
     }
 
     @Test
-    void testGetVotesByPollId() {
+    void testGetAggregateVotesByPollId() {
         ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
         Map<String, Object> projectionPropertiesMap = Map.of(
                 "voteCount", "10",
@@ -83,13 +79,37 @@ public class VoteServiceTest {
         when(mockIVoteRepository.getVotesByIdGroupedByOption(any())).thenReturn(List.of(projection));
 
         List<VotesAggregatedResponse> expected = List.of(VotesAggregatedResponse.builder()
-                        .voteCount(10)
-                        .optionId(1)
+                .voteCount(10)
+                .optionId(1)
+                .build());
+
+        var response = voteService.getAggregatedVotesByPollId(1);
+
+        verify(mockIVoteRepository).getVotesByIdGroupedByOption(1);
+        assertThat(response).isEqualTo(expected);
+    }
+
+    @Test
+    void testGetVotesByPollId() {
+
+        List<VoteEntity> expectedRepositoryResponse = List.of(VoteEntity.builder()
+                .optionsId(1)
+                .id(1)
+                .pollId(1)
+                .date(LocalDateTime.MAX)
+                .build());
+
+        when(mockIVoteRepository.getVotesByPollId(any())).thenReturn(expectedRepositoryResponse);
+
+        List<VoteResponse> expected = List.of(VoteResponse.builder()
+                .id(1)
+                .optionId(1)
+                .date(LocalDateTime.MAX)
                 .build());
 
         var response = voteService.getVotesByPollId(1);
 
-        verify(mockIVoteRepository).getVotesByIdGroupedByOption(1);
+        verify(mockIVoteRepository).getVotesByPollId(1);
         assertThat(response).isEqualTo(expected);
     }
 }

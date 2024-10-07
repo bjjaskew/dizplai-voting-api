@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -21,4 +22,10 @@ public interface IVoteRepository extends JpaRepository<VoteEntity, Integer> {
             GROUP BY ve.optionsId
             """)
     List<VotePollOptionAggregationProjection> getVotesByIdGroupedByOption(@Param("pollId") Integer pollId);
+
+    @Query(value = """
+            SELECT ve FROM VoteEntity ve
+            WHERE ve.pollId = :pollId
+            """)
+    List<VoteEntity> getVotesByPollId(@Param("pollId") Integer pollId);
 }

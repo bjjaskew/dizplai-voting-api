@@ -1,7 +1,7 @@
 package com.dizplai.voting_api.service;
 
 import com.dizplai.voting_api.controller.requests.CreateVoteRequest;
-import com.dizplai.voting_api.controller.responses.OptionResponse;
+import com.dizplai.voting_api.controller.responses.VoteResponse;
 import com.dizplai.voting_api.controller.responses.VotesAggregatedResponse;
 import com.dizplai.voting_api.data.entity.VoteEntity;
 import com.dizplai.voting_api.data.entity.VotePollOptionAggregationProjection;
@@ -31,11 +31,26 @@ public class VoteService {
                 .build());
     }
 
-    public List<VotesAggregatedResponse> getVotesByPollId(Integer pollId) {
+    public List<VoteResponse> getVotesByPollId(Integer pollId) {
+        return iVoteRepository.getVotesByPollId(pollId)
+                .stream()
+                .map(this::voteToResp)
+                .toList();
+    }
+
+    public List<VotesAggregatedResponse> getAggregatedVotesByPollId(Integer pollId) {
         return iVoteRepository.getVotesByIdGroupedByOption(pollId)
                 .stream()
                 .map(this::entityToResp)
                 .toList();
+    }
+
+    private VoteResponse voteToResp(VoteEntity ve) {
+        return VoteResponse.builder()
+                .id(ve.getId())
+                .optionId(ve.getOptionsId())
+                .date(ve.getDate())
+                .build();
     }
 
     private VotesAggregatedResponse entityToResp(VotePollOptionAggregationProjection proj) {
