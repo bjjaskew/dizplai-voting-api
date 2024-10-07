@@ -16,12 +16,10 @@ I have made a number of presumptions about the task which I will highlight here
 - Each of these polls must have a unique name
 - A new poll can have the same name as a previously active poll, if it is now inactive
 
-### Each vote must be cast with some form of unique identifier
+### I will not implement any restrictions on how many votes
 
-- In a production system, I would expect us to use something like session/logins/cookies to validate the users
-- Each user can only vote once per poll
-
-I have therefore decided to include an email field as a method of creating unique votes for this task, however would not recommend this in production.
+- In a production system, if we need to 100% ensure we have only one vote per person, we would need a login mechanism which we would validate
+- If we do not need to guarantee votes, I would use cookies on the client application
 
 ### There is a possibility to add new options to a poll
 
