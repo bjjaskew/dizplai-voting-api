@@ -1,11 +1,11 @@
 package com.dizplai.voting_api.service;
 
 import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
-import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.responses.OptionResponse;
 import com.dizplai.voting_api.data.entity.OptionEntity;
 import com.dizplai.voting_api.data.repository.IOptionRepository;
 import com.dizplai.voting_api.exceptions.NotFoundException;
+import com.dizplai.voting_api.exceptions.PollTooLargeException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +26,13 @@ public class OptionService {
                 .toList();
     }
 
-    public OptionResponse createPollOption(Integer pollId, CreatePollOptionRequest request) throws NotFoundException {
+    public OptionResponse createPollOption(Integer pollId, CreatePollOptionRequest request) throws NotFoundException, PollTooLargeException {
         pollService.getPollById(pollId);
+
+        if (iOptionRepository.getByPollId(pollId).size() >=7) {
+            throw new PollTooLargeException("A poll has a maximum of 7 options");
+        }
+
         return  entityToResp(iOptionRepository.save(OptionEntity.builder()
                 .pollId(pollId)
                 .name(request.getName())

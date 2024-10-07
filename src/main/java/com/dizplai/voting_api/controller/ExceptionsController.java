@@ -1,6 +1,7 @@
 package com.dizplai.voting_api.controller;
 
 import com.dizplai.voting_api.exceptions.NotFoundException;
+import com.dizplai.voting_api.exceptions.PollTooLargeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,11 @@ public class ExceptionsController {
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<String> handleNotFound(NotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = PollTooLargeException.class)
+    public ResponseEntity<String> handlePollTooLargeException(PollTooLargeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     private String fieldErrorToString(FieldError error) {

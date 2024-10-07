@@ -4,6 +4,7 @@ import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
 import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.requests.CreateVoteRequest;
 import com.dizplai.voting_api.exceptions.NotFoundException;
+import com.dizplai.voting_api.exceptions.PollTooLargeException;
 import com.dizplai.voting_api.service.OptionService;
 import com.dizplai.voting_api.service.PollService;
 import com.dizplai.voting_api.service.VoteService;
@@ -52,7 +53,7 @@ public class PollController {
     public ResponseEntity<?> createPollOptionByPollId(
             @PathVariable(value = "poll_id") Integer pollId,
             @Validated @RequestBody CreatePollOptionRequest request
-    ) throws NotFoundException {
+    ) throws NotFoundException, PollTooLargeException {
 
         return ResponseEntity.ok(optionsService.createPollOption(pollId, request));
     }

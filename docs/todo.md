@@ -28,7 +28,7 @@
 
 [X] - T3C - Get poll options endpoint
 
-### T4: Implement vote in pole
+### T4: Implement vote in poll
 [X] - T4A - Vote table
 
     FK option, ID, timestamp
