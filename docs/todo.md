@@ -1,42 +1,42 @@
 # Task List
 
 ### T1: Configure base project to better fit the task
-[ ] - Implement dockerfile to generate container
+[ ] - T1A - Implement dockerfile to generate container
 
-[ ] - Implement docker compose including the app
+[ ] - T1B - Implement docker compose including the app
 
-[ ] - Implement flyway configuration with the application
+[ ] - T1C - Implement flyway configuration with the application
 
 ### T2: Implement create poll / get polls
-[ ] - Poll table design
+[ ] - T2A - Poll table design
 
     Name, description, id, created date, end date
 
-[ ] - Get list of active polls
+[ ] - T2B - Get list of active polls
 
-[ ] - Get list of all polls
+[ ] - T2C - Get list of all polls
 
-[ ] - Create poll endpoint
+[ ] - T2D - Create poll endpoint
 
 
 ### T3: Implement poll options
-[ ] - Poll options table design
+[ ] - T3A - Poll options table design
 
     Option name/desc, FK poll, Id
 
-[ ] - Create poll option/options endpoint
+[ ] - T3B - Create poll option/options endpoint
 
-[ ] - Get poll options endpoint
+[ ] - T3C - Get poll options endpoint
 
 ### T4: Implement vote in pole
-[ ] - Vote table
+[ ] - T3A - Vote table
 
     email/unique identifier, FK option, ID
 
-[ ] - Vote endpoint
+[ ] - T4B - Vote endpoint
 
 ### T5: Implement view votes
-[ ] - Get endpoint to gather votes by poll option, on poll id
+[ ] - T5A - Get endpoint to gather votes by poll option, on poll id
 
 
 
