@@ -12,7 +12,7 @@
 
     Name, description, id, created date, end date
 
-[ ] - T2B - Get list of active polls
+[X] - T2B - Get list of active polls
 
 [ ] - T2C - Get list of all polls
 

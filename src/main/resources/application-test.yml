@@ -1,0 +1,25 @@
+spring:
+  docker:
+    compose:
+      skip:
+        in-tests: false
+
+  flyway:
+    enabled: true
+    schemas: engineering
+    validate-on-migrate: true
+    locations: db/migration
+    baselineOnMigrate: true
+
+  jpa:
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+      show-sql: true
+
+  datasource:
+    initialization_mode: always
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: pguser
+    password: password
