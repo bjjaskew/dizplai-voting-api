@@ -1,9 +1,9 @@
 # Task List
 
 ### T1: Configure base project to better fit the task
-[ ] - T1A - Implement dockerfile to generate container
+[X] - T1A - Implement dockerfile to generate container
 
-[ ] - T1B - Implement docker compose including the app
+[ ] - T1B - Implement docker compose including the app & connect the app to postgres
 
 [ ] - T1C - Implement flyway configuration with the application
 

@@ -1,0 +1,19 @@
+spring:
+  flyway:
+    enabled: true
+    schemas: dizplai
+    validate-on-migrate: true
+    locations: db/migration
+    baselineOnMigrate: true
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      show-sql: true
+
+  datasource:
+    initialization_mode: always
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: pguser
+    password: password
