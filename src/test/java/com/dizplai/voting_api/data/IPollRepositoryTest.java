@@ -38,7 +38,7 @@ public class IPollRepositoryTest {
 
 
     @Test
-    @Sql(scripts = "classpath:sql/testGetActivePolls/noActivePolls.sql")
+    @Sql(scripts = "classpath:sql/testGetPolls/noActivePolls.sql")
     public void testGetActivePolls_noActivePolls() {
         List<PollEntity> response = iPollRepository.getActivePolls(LocalDateTime.now());
         assertThat(response.size()).isEqualTo(0);
@@ -46,7 +46,7 @@ public class IPollRepositoryTest {
 
 
     @Test
-    @Sql(scripts = "classpath:sql/testGetActivePolls/activePolls.sql")
+    @Sql(scripts = "classpath:sql/testGetPolls/activePolls.sql")
     public void testGetActivePolls_activePolls() {
         List<PollEntity> response = iPollRepository.getActivePolls(LocalDateTime.now());
         assertThat(response.size()).isEqualTo(1);

@@ -14,7 +14,7 @@
 
 [X] - T2B - Get list of active polls
 
-[ ] - T2C - Get list of all polls
+[X] - T2C - Get list of all polls
 
 [ ] - T2D - Create poll endpoint
 

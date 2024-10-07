@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import static java.util.Collections.EMPTY_LIST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +32,7 @@ public class PollServiceTest {
     @InjectMocks
     private PollService pollService;
 
-    public static Stream<Arguments> testActivePolls_source() {
+    public static Stream<Arguments> testPolls_source() {
         return Stream.of(
                 Arguments.of(
                         List.of(PollEntity.builder()
@@ -52,10 +53,22 @@ public class PollServiceTest {
     }
 
     @ParameterizedTest
-    @MethodSource("testActivePolls_source")
+    @MethodSource("testPolls_source")
     void testGetActivePolls(List<PollEntity> repositoryResponse, List<PollResponse> expectedResponse) {
         when(mockIPollRepository.getActivePolls(any())).thenReturn(repositoryResponse);
 
         assertThat(pollService.getActivePolls()).isEqualTo(expectedResponse);
+        verify(mockIPollRepository).getActivePolls(any());
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("testPolls_source")
+    void testGetPolls(List<PollEntity> repositoryResponse, List<PollResponse> expectedResponse) {
+        when(mockIPollRepository.findAll()).thenReturn(repositoryResponse);
+
+        assertThat(pollService.getPolls()).isEqualTo(expectedResponse);
+        verify(mockIPollRepository).findAll();
+
     }
 }

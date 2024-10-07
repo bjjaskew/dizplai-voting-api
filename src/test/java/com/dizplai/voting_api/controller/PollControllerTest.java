@@ -25,11 +25,29 @@ public class PollControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PollService mockFoundSecretService;
+    private PollService mockPollService;
+
+    @Test
+    void testGetActivePolls() throws Exception {
+        when(mockPollService.getActivePolls()).thenReturn(EMPTY_LIST);
+
+        String expectedJsonResponse = "[]";
+
+        MvcResult result = this.mockMvc
+                .perform(get("/polls?filter=active")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+
+        verify(mockPollService).getActivePolls();
+        JSONAssert.assertEquals(expectedJsonResponse, response, false);
+    }
 
     @Test
     void testGetPolls() throws Exception {
-        when(mockFoundSecretService.getActivePolls()).thenReturn(EMPTY_LIST);
+        when(mockPollService.getPolls()).thenReturn(EMPTY_LIST);
 
         String expectedJsonResponse = "[]";
 
@@ -40,6 +58,8 @@ public class PollControllerTest {
                 .andReturn();
 
         String response = result.getResponse().getContentAsString();
+
+        verify(mockPollService).getPolls();
         JSONAssert.assertEquals(expectedJsonResponse, response, false);
     }
 }
