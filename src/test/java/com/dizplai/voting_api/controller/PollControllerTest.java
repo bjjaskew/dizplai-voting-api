@@ -2,11 +2,14 @@ package com.dizplai.voting_api.controller;
 
 import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
 import com.dizplai.voting_api.controller.requests.CreatePollRequest;
+import com.dizplai.voting_api.controller.requests.CreateVoteRequest;
 import com.dizplai.voting_api.controller.responses.OptionResponse;
 import com.dizplai.voting_api.controller.responses.PollResponse;
 import com.dizplai.voting_api.exceptions.NotFoundException;
 import com.dizplai.voting_api.service.OptionService;
 import com.dizplai.voting_api.service.PollService;
+import com.dizplai.voting_api.service.VoteService;
+import com.dizplai.voting_api.service.VoteServiceTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
@@ -50,6 +53,9 @@ public class PollControllerTest {
 
     @MockBean
     private OptionService mockOptionService;
+
+    @MockBean
+    private VoteService mockVoteService;
 
     @Test
     void testGetActivePolls() throws Exception {
@@ -269,6 +275,46 @@ public class PollControllerTest {
         String response = result.getResponse().getContentAsString();
 
         verifyNoInteractions(mockOptionService);
+        JSONAssert.assertEquals(expectedJsonResponse, response, false);
+    }
+
+    @Test
+    void testVote() throws Exception {
+
+        CreateVoteRequest request = CreateVoteRequest.builder()
+                .option(1)
+                .build();
+
+        this.mockMvc
+                .perform(post("/poll/1/vote")
+                        .content(OM.writer().writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        verify(mockVoteService).createVote(1, request);
+    }
+
+    @Test
+    void testVote_validation() throws Exception {
+
+        CreateVoteRequest request = CreateVoteRequest.builder()
+                .build();
+
+        String expectedJsonResponse = """
+                ["option must not be null"]
+                """;
+
+        MvcResult result = this.mockMvc
+                .perform(post("/poll/1/vote")
+                        .content(OM.writer().writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+
+        verifyNoInteractions(mockVoteService);
         JSONAssert.assertEquals(expectedJsonResponse, response, false);
     }
 }

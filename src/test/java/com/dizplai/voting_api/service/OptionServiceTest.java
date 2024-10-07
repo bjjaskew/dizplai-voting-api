@@ -99,4 +99,29 @@ public class OptionServiceTest {
         OptionResponse response = optionService.createPollOption(1, request);
         assertThat(response).isEqualTo(expectedResponse);
     }
+
+    @Test
+    void testGetOptionById() throws NotFoundException {
+        OptionEntity expectedRepositoryResponse = OptionEntity.builder()
+                .id(1)
+                .name("An option")
+                .build();
+
+        OptionResponse expectedResponse = OptionResponse.builder()
+                .id(1)
+                .name("An option")
+                .build();
+
+        when(mockIOptionRepository.findById(any())).thenReturn(Optional.of(expectedRepositoryResponse));
+
+        OptionResponse response = optionService.getOptionById(1);
+        assertThat(response).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void testGetPollById_FailsExpectedly() {
+        when(mockIOptionRepository.findById(any())).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> optionService.getOptionById(1));
+    }
+
 }

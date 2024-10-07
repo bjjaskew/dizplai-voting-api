@@ -2,10 +2,13 @@ package com.dizplai.voting_api.controller;
 
 import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
 import com.dizplai.voting_api.controller.requests.CreatePollRequest;
+import com.dizplai.voting_api.controller.requests.CreateVoteRequest;
 import com.dizplai.voting_api.exceptions.NotFoundException;
 import com.dizplai.voting_api.service.OptionService;
 import com.dizplai.voting_api.service.PollService;
+import com.dizplai.voting_api.service.VoteService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +23,7 @@ public class PollController {
 
     private final PollService pollService;
     private final OptionService optionsService;
+    private final VoteService voteService;
 
     @GetMapping(value = "/polls")
     public ResponseEntity<?> getPolls(
@@ -50,6 +54,15 @@ public class PollController {
     ) throws NotFoundException {
 
         return ResponseEntity.ok(optionsService.createPollOption(pollId, request));
+    }
+
+    @PostMapping(value = "/poll/{poll_id}/vote")
+    public ResponseEntity<?> createVote(
+            @PathVariable(value = "poll_id") Integer pollId,
+            @Validated @RequestBody CreateVoteRequest request
+    ) throws NotFoundException {
+        voteService.createVote(pollId, request);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

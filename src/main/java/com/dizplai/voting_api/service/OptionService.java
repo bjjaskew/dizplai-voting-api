@@ -40,4 +40,10 @@ public class OptionService {
                 .name(request.getName())
                 .build()));
     }
+
+    public OptionResponse getOptionById(Integer id) throws NotFoundException {
+        return iOptionRepository.findById(id)
+                .map(this::entityToResp)
+                .orElseThrow(() -> new NotFoundException(String.format("Could not find option with id %s", id)));
+    }
 }

@@ -6,7 +6,7 @@ spring:
 
   flyway:
     enabled: true
-    schemas: engineering
+    schemas: dizplai
     validate-on-migrate: true
     locations: db/migration
     baselineOnMigrate: true

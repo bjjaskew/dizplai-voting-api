@@ -2,6 +2,7 @@ package com.dizplai.voting_api.integration;
 
 import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
 import com.dizplai.voting_api.controller.requests.CreatePollRequest;
+import com.dizplai.voting_api.controller.requests.CreateVoteRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -173,6 +174,26 @@ public class PollControllerIT {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         JSONAssert.assertEquals(expectedResponse, response.getBody(), JSONCompareMode.LENIENT);
+    }
+
+    @Test
+    @Sql(scripts = {
+            "classpath:sql/cleanup.sql",
+            "classpath:/sql/testGetOptions/options.sql"
+    }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:sql/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void test_vote() throws JsonProcessingException {
+        CreateVoteRequest requestBody = CreateVoteRequest.builder()
+                .option(1)
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<String> request = new HttpEntity<>(OM.writeValueAsString(requestBody), headers);
+
+        var response = testRestTemplate.postForEntity(baseURLBuilder("/poll/1/vote"), request, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     private String baseURLBuilder(final String uri) {
