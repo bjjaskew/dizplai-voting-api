@@ -1,11 +1,13 @@
 package com.dizplai.voting_api.service;
 
+import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.responses.PollResponse;
 import com.dizplai.voting_api.data.entity.PollEntity;
 import com.dizplai.voting_api.data.repository.IPollRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class PollService {
 
     private final IPollRepository iPollRepository;
+    private final Clock clock;
 
     public List<PollResponse> getActivePolls() {
         return iPollRepository.getActivePolls(LocalDateTime.now())
@@ -35,5 +38,15 @@ public class PollService {
                 .name(e.getName())
                 .description(e.getDescription())
                 .build();
+    }
+
+    public PollResponse createPoll(CreatePollRequest request) {
+        return entityToResp(
+                iPollRepository.save(PollEntity.builder()
+                        .name(request.getName())
+                        .description(request.getDescription())
+                        .createdDate(LocalDateTime.now(clock))
+                        .endDate(request.getEndDateTime())
+                        .build()));
     }
 }

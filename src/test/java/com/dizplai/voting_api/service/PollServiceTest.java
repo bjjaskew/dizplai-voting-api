@@ -1,8 +1,10 @@
 package com.dizplai.voting_api.service;
 
+import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.responses.PollResponse;
 import com.dizplai.voting_api.data.entity.PollEntity;
 import com.dizplai.voting_api.data.repository.IPollRepository;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,7 +14,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -28,6 +33,9 @@ public class PollServiceTest {
 
     @Mock
     private IPollRepository mockIPollRepository;
+
+    @Mock
+    private Clock mockClock;
 
     @InjectMocks
     private PollService pollService;
@@ -70,5 +78,35 @@ public class PollServiceTest {
         assertThat(pollService.getPolls()).isEqualTo(expectedResponse);
         verify(mockIPollRepository).findAll();
 
+    }
+
+    @Test
+    void testCreatePoll() {
+        PollEntity expectedRepositoryResponse = PollEntity.builder()
+                .id(1)
+                .name("A poll")
+                .description("A poll description")
+                .createdDate(LocalDateTime.MIN)
+                .endDate(LocalDateTime.MAX)
+                .build();
+
+        PollResponse expectedResponse = PollResponse.builder()
+                .id(1)
+                .name("A poll")
+                .description("A poll description")
+                .build();
+
+        CreatePollRequest createPollRequest = CreatePollRequest.builder()
+                .name("A poll")
+                .description("A poll description")
+                .endDateTime(LocalDateTime.MAX)
+                .build();
+
+        when(mockIPollRepository.save(any())).thenReturn(expectedRepositoryResponse);
+        when(mockClock.instant()).thenReturn(Instant.parse("-999999999-01-01T00:00:00Z"));
+        when(mockClock.getZone()).thenReturn(ZoneId.of("UTC"));
+
+        var response = pollService.createPoll(createPollRequest);
+        assertThat(response).isEqualTo(expectedResponse);
     }
 }

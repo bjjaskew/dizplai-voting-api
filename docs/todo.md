@@ -16,7 +16,7 @@
 
 [X] - T2C - Get list of all polls
 
-[ ] - T2D - Create poll endpoint
+[X] - T2D - Create poll endpoint
 
 
 ### T3: Implement poll options
