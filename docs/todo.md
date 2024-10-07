@@ -20,7 +20,7 @@
 
 
 ### T3: Implement poll options
-[ ] - T3A - Poll options table design
+[X] - T3A - Poll options table design
 
     Option name/desc, FK poll, Id
 
