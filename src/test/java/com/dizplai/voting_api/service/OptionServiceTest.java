@@ -1,5 +1,6 @@
 package com.dizplai.voting_api.service;
 
+import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
 import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.responses.OptionResponse;
 import com.dizplai.voting_api.controller.responses.PollResponse;
@@ -67,6 +68,35 @@ public class OptionServiceTest {
         when(mockIOptionRepository.getByPollId(any())).thenReturn(List.of(expectedRepositoryResponse));
 
         List<OptionResponse> response = optionService.getOptionsByPollId(1);
+        assertThat(response).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void testCreatePollOption() throws NotFoundException {
+        PollResponse pollResponse = PollResponse.builder()
+                .id(1)
+                .name("A poll")
+                .description("A poll description")
+                .build();
+
+        OptionEntity expectedRepositoryResponse = OptionEntity.builder()
+                .id(1)
+                .name("An option")
+                .build();
+
+        OptionResponse expectedResponse = OptionResponse.builder()
+                .id(1)
+                .name("An option")
+                .build();
+
+        CreatePollOptionRequest request = CreatePollOptionRequest.builder()
+                .name("An option")
+                .build();
+
+        when(mockPollService.getPollById(any())).thenReturn(pollResponse);
+        when(mockIOptionRepository.save(any())).thenReturn(expectedRepositoryResponse);
+
+        OptionResponse response = optionService.createPollOption(1, request);
         assertThat(response).isEqualTo(expectedResponse);
     }
 }

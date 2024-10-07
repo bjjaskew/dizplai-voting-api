@@ -24,7 +24,7 @@
 
     Option name/desc, FK poll, Id
 
-[] - T3B - Create poll option/options endpoint
+[X] - T3B - Create poll option/options endpoint
 
 [X] - T3C - Get poll options endpoint
 

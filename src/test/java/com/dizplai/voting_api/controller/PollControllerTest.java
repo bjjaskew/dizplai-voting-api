@@ -1,5 +1,6 @@
 package com.dizplai.voting_api.controller;
 
+import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
 import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.responses.OptionResponse;
 import com.dizplai.voting_api.controller.responses.PollResponse;
@@ -142,12 +143,12 @@ public class PollControllerTest {
                                 .endDateTime(LocalDateTime.MIN)
                                 .build(),
                         """
-                        [
-                        "name size must be between 1 and 64",
-                        "endDateTime must be a future date",
-                        "description size must be between 1 and 256"
-                        ]
-                        """
+                                [
+                                "name size must be between 1 and 64",
+                                "endDateTime must be a future date",
+                                "description size must be between 1 and 256"
+                                ]
+                                """
                 )
         );
     }
@@ -173,8 +174,8 @@ public class PollControllerTest {
     void testGetPollOptionsByPollId() throws Exception {
 
         when(mockOptionService.getOptionsByPollId(any())).thenReturn(List.of(OptionResponse.builder()
-                        .id(1)
-                        .name("An Option")
+                .id(1)
+                .name("An Option")
                 .build()));
 
         String expectedJsonResponse = """
@@ -213,5 +214,61 @@ public class PollControllerTest {
 
         verify(mockOptionService).getOptionsByPollId(1);
         assertThat(response).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void testCreatePollOption() throws Exception {
+
+        CreatePollOptionRequest request = CreatePollOptionRequest.builder()
+                .name("An Option")
+                .build();
+
+        when(mockOptionService.createPollOption(any(), any())).thenReturn(OptionResponse.builder()
+                .id(1)
+                .name("An Option")
+                .build());
+
+        String expectedJsonResponse = """
+                {
+                  "id": 1,
+                  "name": "An Option"
+                }
+                """;
+
+        MvcResult result = this.mockMvc
+                .perform(post("/poll/1/option")
+                        .content(OM.writer().writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+
+        verify(mockOptionService).createPollOption(1, request);
+        JSONAssert.assertEquals(expectedJsonResponse, response, false);
+    }
+
+    @Test
+    void testCreatePollOption_validation() throws Exception {
+
+        CreatePollOptionRequest request = CreatePollOptionRequest.builder()
+                .name(new String(new char[65]).replace('\0', 'a'))
+                .build();
+
+        String expectedJsonResponse = """
+                ["name size must be between 1 and 64"]
+                """;
+
+        MvcResult result = this.mockMvc
+                .perform(post("/poll/1/option")
+                        .content(OM.writer().writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+
+        verifyNoInteractions(mockOptionService);
+        JSONAssert.assertEquals(expectedJsonResponse, response, false);
     }
 }

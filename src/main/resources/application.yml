@@ -1,4 +1,9 @@
 spring:
+  docker:
+    compose:
+      skip:
+        in-tests: false
+
   flyway:
     enabled: true
     schemas: dizplai

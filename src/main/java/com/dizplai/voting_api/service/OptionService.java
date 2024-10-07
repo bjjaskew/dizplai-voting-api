@@ -1,5 +1,7 @@
 package com.dizplai.voting_api.service;
 
+import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
+import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.responses.OptionResponse;
 import com.dizplai.voting_api.data.entity.OptionEntity;
 import com.dizplai.voting_api.data.repository.IOptionRepository;
@@ -29,5 +31,13 @@ public class OptionService {
                 .id(e.getId())
                 .name(e.getName())
                 .build();
+    }
+
+    public OptionResponse createPollOption(Integer pollId, CreatePollOptionRequest request) throws NotFoundException {
+        pollService.getPollById(pollId);
+        return  entityToResp(iOptionRepository.save(OptionEntity.builder()
+                .pollId(pollId)
+                .name(request.getName())
+                .build()));
     }
 }

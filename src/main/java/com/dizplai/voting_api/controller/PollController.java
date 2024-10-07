@@ -1,5 +1,6 @@
 package com.dizplai.voting_api.controller;
 
+import com.dizplai.voting_api.controller.requests.CreatePollOptionRequest;
 import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.exceptions.NotFoundException;
 import com.dizplai.voting_api.service.OptionService;
@@ -40,5 +41,14 @@ public class PollController {
             @PathVariable(value = "poll_id") Integer pollId) throws NotFoundException {
 
         return ResponseEntity.ok(optionsService.getOptionsByPollId(pollId));
+    }
+
+    @PostMapping(value = "/poll/{poll_id}/option")
+    public ResponseEntity<?> createPollOptionByPollId(
+            @PathVariable(value = "poll_id") Integer pollId,
+            @Validated @RequestBody CreatePollOptionRequest request
+    ) throws NotFoundException {
+
+        return ResponseEntity.ok(optionsService.createPollOption(pollId, request));
     }
 }
