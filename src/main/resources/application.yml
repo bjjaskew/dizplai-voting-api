@@ -1,8 +1,8 @@
 spring:
   docker:
     compose:
-      skip:
-        in-tests: false
+      enabled: true
+      file: docker-compose.yaml
 
   flyway:
     enabled: true

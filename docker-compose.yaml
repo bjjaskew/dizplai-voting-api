@@ -8,6 +8,7 @@ services:
     container_name: voting-api
     image: voting-api:latest
     restart: always
+    profiles: [full]
 
     ports:
       - "8080:8080"
