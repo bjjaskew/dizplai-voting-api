@@ -36,7 +36,7 @@
 [X] - T4B - Vote endpoint
 
 ### T5: Implement view votes
-[ ] - T5A - Get endpoint to gather votes by poll option, on poll id
+[X] - T5A - Get endpoint to gather votes by poll option, on poll id
 
 
 

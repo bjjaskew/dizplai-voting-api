@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class OptionResponse {
-    private Integer id;
-    private String name;
-    private Integer votes;
+public class VotesAggregatedResponse {
+
+    Integer optionId;
+    Integer voteCount;
 }

@@ -7,6 +7,7 @@ import com.dizplai.voting_api.exceptions.NotFoundException;
 import com.dizplai.voting_api.service.OptionService;
 import com.dizplai.voting_api.service.PollService;
 import com.dizplai.voting_api.service.VoteService;
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,13 @@ public class PollController {
     ) throws NotFoundException {
 
         return ResponseEntity.ok(optionsService.createPollOption(pollId, request));
+    }
+
+    @GetMapping(value = "/poll/{poll_id}/votes")
+    public ResponseEntity<?> getVotesByPollId(
+            @PathVariable(value = "poll_id") Integer pollId
+    ) {
+        return ResponseEntity.ok(voteService.getVotesByPollId(pollId));
     }
 
     @PostMapping(value = "/poll/{poll_id}/vote")

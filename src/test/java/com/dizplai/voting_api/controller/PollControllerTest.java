@@ -5,6 +5,7 @@ import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.requests.CreateVoteRequest;
 import com.dizplai.voting_api.controller.responses.OptionResponse;
 import com.dizplai.voting_api.controller.responses.PollResponse;
+import com.dizplai.voting_api.controller.responses.VotesAggregatedResponse;
 import com.dizplai.voting_api.exceptions.NotFoundException;
 import com.dizplai.voting_api.service.OptionService;
 import com.dizplai.voting_api.service.PollService;
@@ -315,6 +316,33 @@ public class PollControllerTest {
         String response = result.getResponse().getContentAsString();
 
         verifyNoInteractions(mockVoteService);
+        JSONAssert.assertEquals(expectedJsonResponse, response, false);
+    }
+
+    @Test
+    void testGetVotesByPollId() throws Exception {
+
+        when(mockVoteService.getVotesByPollId(any())).thenReturn(List.of(VotesAggregatedResponse.builder()
+                .voteCount(10)
+                .optionId(1)
+                .build()));
+
+        String expectedJsonResponse = """
+                [{
+                  "optionId":1,
+                  "voteCount":10
+                }]
+                """;
+
+        MvcResult result = this.mockMvc
+                .perform(get("/poll/1/votes")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+
+        verify(mockVoteService).getVotesByPollId(1);
         JSONAssert.assertEquals(expectedJsonResponse, response, false);
     }
 }

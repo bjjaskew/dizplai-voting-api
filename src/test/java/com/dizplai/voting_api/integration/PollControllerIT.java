@@ -196,6 +196,33 @@ public class PollControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
+    @Test
+    @Sql(scripts = {
+            "classpath:sql/cleanup.sql",
+            "classpath:/sql/testVotes/votingDetails.sql"
+    }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:sql/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void test_getVotesByPollId() throws JSONException {
+        var response = testRestTemplate.getForEntity(baseURLBuilder("/poll/1/votes"), String.class);
+
+        String expectedResponse = """
+                [
+                {
+                    "optionId" : 1,
+                    "voteCount" : 3
+                },
+                {
+                    "optionId" : 2,
+                    "voteCount" : 1
+                }
+                ]
+                """;
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        JSONAssert.assertEquals(expectedResponse, response.getBody(), JSONCompareMode.LENIENT);
+    }
+
+
     private String baseURLBuilder(final String uri) {
         return String.format("http://localhost:%s%s", port, uri);
     }

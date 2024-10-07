@@ -26,13 +26,6 @@ public class OptionService {
                 .toList();
     }
 
-    private OptionResponse entityToResp(OptionEntity e) {
-        return OptionResponse.builder()
-                .id(e.getId())
-                .name(e.getName())
-                .build();
-    }
-
     public OptionResponse createPollOption(Integer pollId, CreatePollOptionRequest request) throws NotFoundException {
         pollService.getPollById(pollId);
         return  entityToResp(iOptionRepository.save(OptionEntity.builder()
@@ -45,5 +38,12 @@ public class OptionService {
         return iOptionRepository.findById(id)
                 .map(this::entityToResp)
                 .orElseThrow(() -> new NotFoundException(String.format("Could not find option with id %s", id)));
+    }
+
+    private OptionResponse entityToResp(OptionEntity e) {
+        return OptionResponse.builder()
+                .id(e.getId())
+                .name(e.getName())
+                .build();
     }
 }

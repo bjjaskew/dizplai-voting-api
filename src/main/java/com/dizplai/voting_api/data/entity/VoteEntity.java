@@ -25,7 +25,7 @@ public class VoteEntity {
     private Integer pollId;
 
     @Column(name = "options_id")
-    private Integer options_id;
+    private Integer optionsId;
 
     @Column(name = "vote_date")
     private LocalDateTime date;
