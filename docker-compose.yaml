@@ -1,0 +1,27 @@
+volumes:
+  db_mount:
+    name: db_mount
+
+services:
+  app:
+    container_name: voting-api
+    image: voting-api:latest
+    restart: always
+
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+  db:
+    container_name: postgres
+    image: postgresl
+    restart: always
+    user: postgres
+    environment:
+      - POSTGRES_USER=pguser
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_mount:/var/lib/postgresql/data 
