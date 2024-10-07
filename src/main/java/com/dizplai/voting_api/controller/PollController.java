@@ -1,15 +1,14 @@
 package com.dizplai.voting_api.controller;
 
 import com.dizplai.voting_api.controller.requests.CreatePollRequest;
+import com.dizplai.voting_api.exceptions.NotFoundException;
+import com.dizplai.voting_api.service.OptionService;
 import com.dizplai.voting_api.service.PollService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 import java.util.Set;
@@ -19,6 +18,7 @@ import java.util.Set;
 public class PollController {
 
     private final PollService pollService;
+    private final OptionService optionsService;
 
     @GetMapping(value = "/polls")
     public ResponseEntity<?> getPolls(
@@ -33,5 +33,12 @@ public class PollController {
     public ResponseEntity<?> createPoll(
             @Validated @RequestBody CreatePollRequest request) {
         return ResponseEntity.ok(pollService.createPoll(request));
+    }
+
+    @GetMapping(value = "/poll/{poll_id}/options")
+    public ResponseEntity<?> getPollOptionsByPollId(
+            @PathVariable(value = "poll_id") Integer pollId) throws NotFoundException {
+
+        return ResponseEntity.ok(optionsService.getOptionsByPollId(pollId));
     }
 }

@@ -4,7 +4,10 @@ import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.responses.PollResponse;
 import com.dizplai.voting_api.data.entity.PollEntity;
 import com.dizplai.voting_api.data.repository.IPollRepository;
+import com.dizplai.voting_api.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -30,6 +33,12 @@ public class PollService {
                 .stream()
                 .map(this::entityToResp)
                 .toList();
+    }
+
+    public PollResponse getPollById(Integer id) throws NotFoundException {
+        return iPollRepository.findById(id)
+                .map(this::entityToResp)
+                .orElseThrow(() -> new NotFoundException(String.format("Could not find poll with id %s", id)));
     }
 
     private PollResponse entityToResp(PollEntity e) {

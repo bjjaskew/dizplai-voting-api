@@ -4,6 +4,8 @@ import com.dizplai.voting_api.controller.requests.CreatePollRequest;
 import com.dizplai.voting_api.controller.responses.PollResponse;
 import com.dizplai.voting_api.data.entity.PollEntity;
 import com.dizplai.voting_api.data.repository.IPollRepository;
+import com.dizplai.voting_api.exceptions.NotFoundException;
+import org.hibernate.annotations.Parameter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.repository.query.Param;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Clock;
@@ -19,10 +22,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Collections.EMPTY_LIST;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -108,5 +113,33 @@ public class PollServiceTest {
 
         var response = pollService.createPoll(createPollRequest);
         assertThat(response).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void testGetPollById() throws NotFoundException {
+        PollEntity expectedRepositoryResponse = PollEntity.builder()
+                .id(1)
+                .name("A poll")
+                .description("A poll description")
+                .createdDate(LocalDateTime.MIN)
+                .endDate(LocalDateTime.MAX)
+                .build();
+
+        PollResponse expectedResponse = PollResponse.builder()
+                .id(1)
+                .name("A poll")
+                .description("A poll description")
+                .build();
+
+        when(mockIPollRepository.findById(any())).thenReturn(Optional.of(expectedRepositoryResponse));
+
+        PollResponse response = pollService.getPollById(1);
+        assertThat(response).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void testGetPollById_FailsExpectedly() {
+        when(mockIPollRepository.findById(any())).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> pollService.getPollById(1));
     }
 }

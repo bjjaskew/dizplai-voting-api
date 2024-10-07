@@ -1,7 +1,10 @@
 package com.dizplai.voting_api.controller;
 
 import com.dizplai.voting_api.controller.requests.CreatePollRequest;
+import com.dizplai.voting_api.controller.responses.OptionResponse;
 import com.dizplai.voting_api.controller.responses.PollResponse;
+import com.dizplai.voting_api.exceptions.NotFoundException;
+import com.dizplai.voting_api.service.OptionService;
 import com.dizplai.voting_api.service.PollService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -20,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.Collections.EMPTY_LIST;
@@ -42,6 +46,9 @@ public class PollControllerTest {
 
     @MockBean
     private PollService mockPollService;
+
+    @MockBean
+    private OptionService mockOptionService;
 
     @Test
     void testGetActivePolls() throws Exception {
@@ -160,5 +167,51 @@ public class PollControllerTest {
 
         verifyNoInteractions(mockPollService);
         JSONAssert.assertEquals(expectedResponse, response, false);
+    }
+
+    @Test
+    void testGetPollOptionsByPollId() throws Exception {
+
+        when(mockOptionService.getOptionsByPollId(any())).thenReturn(List.of(OptionResponse.builder()
+                        .id(1)
+                        .name("An Option")
+                .build()));
+
+        String expectedJsonResponse = """
+                [{
+                  "id": 1,
+                  "name": "An Option"
+                }]
+                """;
+
+        MvcResult result = this.mockMvc
+                .perform(get("/poll/1/options")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+
+        verify(mockOptionService).getOptionsByPollId(1);
+        JSONAssert.assertEquals(expectedJsonResponse, response, false);
+    }
+
+    @Test
+    void testGetPollOptionsByPollId_PollNotFound() throws Exception {
+
+        when(mockOptionService.getOptionsByPollId(any())).thenThrow(new NotFoundException("Poll with ID 1 not found"));
+
+        String expectedResponse = "Poll with ID 1 not found";
+
+        MvcResult result = this.mockMvc
+                .perform(get("/poll/1/options")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+
+        verify(mockOptionService).getOptionsByPollId(1);
+        assertThat(response).isEqualTo(expectedResponse);
     }
 }

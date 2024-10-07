@@ -1,6 +1,8 @@
 package com.dizplai.voting_api.data;
 
+import com.dizplai.voting_api.data.entity.OptionEntity;
 import com.dizplai.voting_api.data.entity.PollEntity;
+import com.dizplai.voting_api.data.repository.IOptionRepository;
 import com.dizplai.voting_api.data.repository.IPollRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,31 +24,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @Sql(scripts = "classpath:sql/cleanup.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "classpath:sql/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-public class IPollRepositoryTest {
+public class IOptionRepositoryTest {
 
     @Autowired
-    private IPollRepository iPollRepository;
+    private IOptionRepository iOptionRepository;
 
     @Test
-    public void testGetActivePolls_NoData() {
-        List<PollEntity> response = iPollRepository.getActivePolls(LocalDateTime.now());
+    public void testGetOptionsByPollId() {
+        List<OptionEntity> response = iOptionRepository.getByPollId(1);
         assertThat(response.size()).isEqualTo(0);
     }
 
 
     @Test
-    @Sql(scripts = "classpath:sql/testGetPolls/noActivePolls.sql")
+    @Sql(scripts = "classpath:sql/testGetOptions/options.sql")
     public void testGetActivePolls_noActivePolls() {
-        List<PollEntity> response = iPollRepository.getActivePolls(LocalDateTime.now());
-        assertThat(response.size()).isEqualTo(0);
-    }
-
-
-    @Test
-    @Sql(scripts = "classpath:sql/testGetPolls/activePolls.sql")
-    public void testGetActivePolls_activePolls() {
-        List<PollEntity> response = iPollRepository.getActivePolls(LocalDateTime.now());
-        assertThat(response.size()).isEqualTo(1);
+        List<OptionEntity> response = iOptionRepository.getByPollId(1);
+        assertThat(response.size()).isEqualTo(2);
     }
 }
 

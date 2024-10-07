@@ -24,9 +24,9 @@
 
     Option name/desc, FK poll, Id
 
-[ ] - T3B - Create poll option/options endpoint
+[] - T3B - Create poll option/options endpoint
 
-[ ] - T3C - Get poll options endpoint
+[X] - T3C - Get poll options endpoint
 
 ### T4: Implement vote in pole
 [ ] - T3A - Vote table
