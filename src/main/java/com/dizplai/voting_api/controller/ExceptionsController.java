@@ -3,7 +3,6 @@ package com.dizplai.voting_api.controller;
 import com.dizplai.voting_api.exceptions.NotFoundException;
 import com.dizplai.voting_api.exceptions.PollTooLargeException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;

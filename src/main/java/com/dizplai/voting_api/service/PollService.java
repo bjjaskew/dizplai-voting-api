@@ -6,8 +6,6 @@ import com.dizplai.voting_api.data.entity.PollEntity;
 import com.dizplai.voting_api.data.repository.IPollRepository;
 import com.dizplai.voting_api.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;

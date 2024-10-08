@@ -1,8 +1,6 @@
 package com.dizplai.voting_api.data;
 
-import com.dizplai.voting_api.data.entity.PollEntity;
 import com.dizplai.voting_api.data.entity.VotePollOptionAggregationProjection;
-import com.dizplai.voting_api.data.repository.IPollRepository;
 import com.dizplai.voting_api.data.repository.IVoteRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

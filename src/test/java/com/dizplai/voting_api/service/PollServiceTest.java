@@ -5,7 +5,6 @@ import com.dizplai.voting_api.controller.responses.PollResponse;
 import com.dizplai.voting_api.data.entity.PollEntity;
 import com.dizplai.voting_api.data.repository.IPollRepository;
 import com.dizplai.voting_api.exceptions.NotFoundException;
-import org.hibernate.annotations.Parameter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,7 +13,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.repository.query.Param;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Clock;
